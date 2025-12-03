@@ -1,4 +1,4 @@
-import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
+import { getFileContent } from '../../shared/utils';
 
 interface IMapper {
   dst: number;
@@ -32,13 +32,18 @@ export class Seed {
   }
 
   private getSeedLineNumbers(): number[] {
-    return this.blocks.at(0)!.split(':').at(1)!.trim().split(' ')
-      .map(seed => parseInt(seed));
+    return this.blocks
+      .at(0)!
+      .split(':')
+      .at(1)!
+      .trim()
+      .split(' ')
+      .map((seed) => parseInt(seed));
   }
 
   private getMaps(): Map<string, IMapper[]> {
     const maps: Map<string, IMapper[]> = new Map<string, IMapper[]>();
-    this.blocks.slice(1, this.blocks.length).forEach(block => {
+    this.blocks.slice(1, this.blocks.length).forEach((block) => {
       const blockLines: string[] = block.split('\n');
       maps.set(this.getName(blockLines), this.getMappers(blockLines));
     });
@@ -50,7 +55,7 @@ export class Seed {
   }
 
   private getMappers(blockLines: string[]): IMapper[] {
-    return blockLines.slice(1, blockLines.length).map(blockLine => this.getMapper(blockLine));
+    return blockLines.slice(1, blockLines.length).map((blockLine) => this.getMapper(blockLine));
   }
 
   private getMapper(blockLine: string): IMapper {
@@ -58,7 +63,7 @@ export class Seed {
     return {
       dst: parseInt(values.at(0)!),
       src: parseInt(values.at(1)!),
-      range: parseInt(values.at(2)!)
+      range: parseInt(values.at(2)!),
     };
   }
 
@@ -68,7 +73,7 @@ export class Seed {
     for (let i = 0; i < seeds.length; i += 2) {
       intervals.push({
         start: seeds.at(i)!,
-        end: seeds.at(i)! + seeds.at(i + 1)!
+        end: seeds.at(i)! + seeds.at(i + 1)!,
       });
     }
     return intervals;
@@ -84,12 +89,15 @@ export class Seed {
   }
 
   private getSeed(location: number, maps: Map<string, IMapper[]>): number {
-    return [...maps.values()].reduceRight((input, mappers) => this.reverseMap(input, mappers), location);
+    return [...maps.values()].reduceRight(
+      (input, mappers) => this.reverseMap(input, mappers),
+      location,
+    );
   }
 
   private reverseMap(input: number, mappers: IMapper[]): number {
     for (let mapper of mappers) {
-      if ((mapper.dst <= input) && (input < mapper.dst + mapper.range)) {
+      if (mapper.dst <= input && input < mapper.dst + mapper.range) {
         return mapper.src + (input - mapper.dst);
       }
     }
@@ -97,12 +105,12 @@ export class Seed {
   }
 
   private isActualSeed(seed: number, intervals: IInterval[]): boolean {
-    return intervals.some(interval => (interval.start <= seed && seed < interval.end));
+    return intervals.some((interval) => interval.start <= seed && seed < interval.end);
   }
 
   // Part 1
   private getLocations(seeds: number[], maps: Map<string, IMapper[]>): number[] {
-    return seeds.map(seed => this.getLocation(seed, maps));
+    return seeds.map((seed) => this.getLocation(seed, maps));
   }
 
   private getLocation(seed: number, maps: Map<string, IMapper[]>): number {
@@ -111,7 +119,7 @@ export class Seed {
 
   private map(input: number, mappers: IMapper[]): number {
     for (let mapper of mappers) {
-      if ((mapper.src <= input) && (input < mapper.src + mapper.range)) {
+      if (mapper.src <= input && input < mapper.src + mapper.range) {
         return mapper.dst + (input - mapper.src);
       }
     }
@@ -119,7 +127,7 @@ export class Seed {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
+getFileContent('').then((data) => {
   const seed: Seed = new Seed(data);
   console.log(seed.partOne());
   console.log(seed.partTwo());

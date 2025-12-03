@@ -1,20 +1,20 @@
-import { PuzzleInputReader } from '../../../shared/puzzle-input-reader';
+import { getFileContent } from '../../shared/utils';
 
 export class Trebuchet {
   readonly substitutes: Map<string, string> = new Map<string, string>([
-    [ 'one', 'o1e' ],
-    [ 'two', 't2o' ],
-    [ 'three', 't3e' ],
-    [ 'four', 'f4r' ],
-    [ 'five', 'f5e' ],
-    [ 'six', 's6x' ],
-    [ 'seven', 's7n' ],
-    [ 'eight', 'e8t' ],
-    [ 'nine', 'n9e' ],
+    ['one', 'o1e'],
+    ['two', 't2o'],
+    ['three', 't3e'],
+    ['four', 'f4r'],
+    ['five', 'f5e'],
+    ['six', 's6x'],
+    ['seven', 's7n'],
+    ['eight', 'e8t'],
+    ['nine', 'n9e'],
   ]);
 
   solve(): any {
-    PuzzleInputReader.getPuzzleInput(PuzzleInputReader.path).then(data => {
+    getFileContent('').then((data) => {
       console.log('part 1:', this.partOne(data));
       console.log('part 2:', this.partTwo(data));
     });
@@ -23,9 +23,9 @@ export class Trebuchet {
   partOne(data: string): number {
     let sum: number = 0;
     const lines: string[] = data.split('\n');
-    lines.forEach(line => {
+    lines.forEach((line) => {
       const firstAndLast: string[] = this.getFirstAndLast(line);
-      sum += parseInt(firstAndLast[0] + firstAndLast[1]);
+      sum += parseInt(firstAndLast[0]! + firstAndLast[1]!);
     });
     return sum;
   }
@@ -33,13 +33,13 @@ export class Trebuchet {
   partTwo(data: string): number {
     let sum: number = 0;
     const lines: string[] = data.split('\n');
-    lines.forEach(line => {
+    lines.forEach((line) => {
       let replacedLine = line;
       this.substitutes.forEach((value, key) => {
         replacedLine = replacedLine.replace(new RegExp(`${key}`, 'g'), value);
       });
       const firstAndLast: string[] = this.getFirstAndLast(replacedLine);
-      sum += parseInt(firstAndLast[0] + firstAndLast[1]);
+      sum += parseInt(firstAndLast[0]! + firstAndLast[1]!);
     });
     return sum;
   }

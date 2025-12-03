@@ -11,6 +11,7 @@
   "description": "Advent of Code 2025",
   "devDependencies": {
     "@types/jest": "^30.0.0",
+    "@types/node": "^24.10.1",
     "jest": "^30.2.0",
     "prettier": "^3.7.3",
     "ts-jest": "^29.4.5",

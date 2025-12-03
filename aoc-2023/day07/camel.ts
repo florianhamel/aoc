@@ -1,4 +1,4 @@
-import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
+import { getFileContent } from '../../shared/utils';
 
 interface IHand {
   cards: string;
@@ -12,7 +12,7 @@ enum HandType {
   THREE_KIND,
   FULL_HOUSE,
   FOUR_KIND,
-  FIVE_KIND
+  FIVE_KIND,
 }
 
 abstract class AbstractCamel {
@@ -26,13 +26,12 @@ abstract class AbstractCamel {
 
   solve(): number {
     const hands: IHand[] = this.getHands();
-    return this.getSortedHands(hands).reduce((sum, hand, rank) =>
-      sum + (hand.bid * (rank + 1)), 0);
+    return this.getSortedHands(hands).reduce((sum, hand, rank) => sum + hand.bid * (rank + 1), 0);
   }
-  
+
   protected getHands(): IHand[] {
     const hands: IHand[] = [];
-    this.lines.forEach(line => {
+    this.lines.forEach((line) => {
       hands.push(this.getHand(line));
     });
     return hands;
@@ -42,13 +41,12 @@ abstract class AbstractCamel {
     const splitLine: string[] = line.split(' ');
     return {
       cards: splitLine.at(0)!,
-      bid: parseInt(splitLine.at(1)!)
+      bid: parseInt(splitLine.at(1)!),
     };
   }
 
   protected getSortedHands(hands: IHand[]): IHand[] {
-    return hands.sort((first, second) =>
-      this.compareHands(first.cards, second.cards));
+    return hands.sort((first, second) => this.compareHands(first.cards, second.cards));
   }
 
   protected abstract compareHands(first: string, second: string): number;
@@ -94,8 +92,19 @@ abstract class AbstractCamel {
 
 export class Camel extends AbstractCamel {
   readonly cardsValue: Map<string, number> = new Map([
-    ['A', 14], ['K', 13], ['Q', 12], ['J', 11], ['T', 10],
-    ['9', 9], ['8', 8], ['7', 7], ['6', 6], ['5', 5], ['4', 4], ['3', 3], ['2', 2]
+    ['A', 14],
+    ['K', 13],
+    ['Q', 12],
+    ['J', 11],
+    ['T', 10],
+    ['9', 9],
+    ['8', 8],
+    ['7', 7],
+    ['6', 6],
+    ['5', 5],
+    ['4', 4],
+    ['3', 3],
+    ['2', 2],
   ]);
 
   constructor(data: string) {
@@ -105,14 +114,25 @@ export class Camel extends AbstractCamel {
   compareHands(first: string, second: string): number {
     const typeFirst: HandType = this.getHandType(first);
     const typeSecond: HandType = this.getHandType(second);
-    return (typeFirst === typeSecond) ? this.compareCards(first, second) : typeFirst - typeSecond;
+    return typeFirst === typeSecond ? this.compareCards(first, second) : typeFirst - typeSecond;
   }
 }
 
 export class CamelJoker extends AbstractCamel {
   readonly cardsValue: Map<string, number> = new Map([
-    ['A', 14], ['K', 13], ['Q', 12], ['T', 10],
-    ['9', 9], ['8', 8], ['7', 7], ['6', 6], ['5', 5], ['4', 4], ['3', 3], ['2', 2], ['J', 1]
+    ['A', 14],
+    ['K', 13],
+    ['Q', 12],
+    ['T', 10],
+    ['9', 9],
+    ['8', 8],
+    ['7', 7],
+    ['6', 6],
+    ['5', 5],
+    ['4', 4],
+    ['3', 3],
+    ['2', 2],
+    ['J', 1],
   ]);
 
   constructor(data: string) {
@@ -122,7 +142,7 @@ export class CamelJoker extends AbstractCamel {
   protected compareHands(first: string, second: string): number {
     const typeFirst: HandType = this.getHandTypeWithJoker(first);
     const typeSecond: HandType = this.getHandTypeWithJoker(second);
-    return (typeFirst === typeSecond) ? this.compareCards(first, second) : typeFirst - typeSecond;
+    return typeFirst === typeSecond ? this.compareCards(first, second) : typeFirst - typeSecond;
   }
 
   private getHandTypeWithJoker(cards: string): HandType {
@@ -131,14 +151,14 @@ export class CamelJoker extends AbstractCamel {
       return this.getHandType(cards);
     }
     let best: HandType = HandType.HIGH_CARD;
-    [...cardsMap.keys()].forEach(card => {
+    [...cardsMap.keys()].forEach((card) => {
       best = Math.max(best, this.getHandType(cards.replace(/J/g, card)));
     });
     return best;
   }
 }
 
-PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
+getFileContent('').then((data) => {
   const camel: Camel = new Camel(data);
   const camelJoker: CamelJoker = new CamelJoker(data);
   console.log(camel.solve());

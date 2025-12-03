@@ -1,4 +1,3 @@
-import { describe, it } from '@jest/globals';
 import { Trebuchet } from './trebuchet';
 
 describe('partOne', () => {

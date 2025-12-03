@@ -1,4 +1,4 @@
-import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
+import { getFileContent } from '../../shared/utils';
 
 interface IPipe {
   pos: IPos;
@@ -15,7 +15,7 @@ enum Cardinal {
   North,
   East,
   South,
-  West
+  West,
 }
 
 export class Pipe {
@@ -26,19 +26,19 @@ export class Pipe {
     ['J', ['North', 'West']],
     ['7', ['South', 'West']],
     ['F', ['East', 'South']],
-    ['.', ['.', '.']]
+    ['.', ['.', '.']],
   ]);
 
   readonly cardinalMap: Map<string, string[]> = new Map<string, string[]>([
     ['North', ['|', '7', 'F']],
     ['East', ['-', 'J', '7']],
     ['South', ['|', 'L', 'J']],
-    ['West', ['-', 'L', 'F']]
+    ['West', ['-', 'L', 'F']],
   ]);
 
   solve(data: string): number {
-    const map: string[][] = data.split('\n').map(line => [...line]);
-    const startPipe: IPipe = this.getStartPipe(map, { y: map.length, x: map[0].length });
+    const map: string[][] = data.split('\n').map((line) => [...line]);
+    const startPipe: IPipe = this.getStartPipe(map, { y: map.length, x: map[0]!.length });
     const loopLength: number = this.getLoopLength(map, startPipe);
     return Math.ceil(loopLength / 2);
   }
@@ -64,13 +64,13 @@ export class Pipe {
   }
 
   private getFirstPipe(map: string[][], startPipe: IPipe): IPipe {
-    const cardinals: string[] = Object.keys(Cardinal).filter(key => isNaN(parseInt(key)));
+    const cardinals: string[] = Object.keys(Cardinal).filter((key) => isNaN(parseInt(key)));
     for (let cardinal of cardinals) {
       const cardPos: IPos = this.getCardPos(startPipe.pos, cardinal);
       if (this.pipeFits(cardinal, this.at(map, cardPos))) {
         return {
           pos: cardPos,
-          prev: startPipe
+          prev: startPipe,
         };
       }
     }
@@ -78,16 +78,17 @@ export class Pipe {
   }
 
   private pipeFits(cardinal: string, pipe: string): boolean {
-    return (pipe === 'S') || this.cardinalMap.get(cardinal)!.includes(pipe);
+    return pipe === 'S' || this.cardinalMap.get(cardinal)!.includes(pipe);
   }
 
   private getNextPipe(map: string[][], currentPipe: IPipe): IPipe {
-    const pos: IPos = this.pipesMap.get(this.at(map, currentPipe.pos))!
-      .map(cardinal => this.getCardPos(currentPipe.pos, cardinal))
-      .find(cardPos => !this.isEqual(cardPos, currentPipe.prev!.pos))!;
+    const pos: IPos = this.pipesMap
+      .get(this.at(map, currentPipe.pos))!
+      .map((cardinal) => this.getCardPos(currentPipe.pos, cardinal))
+      .find((cardPos) => !this.isEqual(cardPos, currentPipe.prev!.pos))!;
     const nextPipe: IPipe = {
       pos: pos,
-      prev: currentPipe
+      prev: currentPipe,
     };
     currentPipe.next = nextPipe;
     return nextPipe;
@@ -112,11 +113,11 @@ export class Pipe {
   }
 
   private isEqual(first: IPos, second: IPos): boolean {
-    return (first.y === second.y) && (first.x === second.x);
+    return first.y === second.y && first.x === second.x;
   }
 }
 
-PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
+getFileContent('').then((data) => {
   const pipe: Pipe = new Pipe();
   console.log(pipe.solve(data));
 });

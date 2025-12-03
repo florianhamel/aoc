@@ -1,4 +1,4 @@
-import { PuzzleInputReader } from '../../shared/puzzle-input-reader';
+import { getFileContent } from '../../shared/utils';
 
 type Node = { prev: Node; next: Node; val: number };
 
@@ -61,7 +61,7 @@ function buildRangeCircularLinkedList() {
 }
 
 export async function solveDay01() {
-  const input = await PuzzleInputReader.getPuzzleInput('./aoc-2025/day01/puzzle-input.txt');
+  const input = await getFileContent('aoc-2025/day01/puzzle-input.txt');
   const lines = input.split('\n');
 
   console.log(getZeroOccurrences(lines));

@@ -1,5 +1,4 @@
-import { PuzzleInputReader } from '../../../shared/puzzle-input-reader';
-import { isDefined } from '../../../shared/utils';
+import { getFileContent } from '../../shared/utils';
 
 interface IPos {
   y: number;
@@ -58,7 +57,9 @@ export class GearRatios {
         }
       }
     }
-    return (gearNumbers.length === 2) ? gearNumbers.reduce((ratio, gearNumber) => ratio * gearNumber, 1) : 0;
+    return gearNumbers.length === 2
+      ? gearNumbers.reduce((ratio, gearNumber) => ratio * gearNumber, 1)
+      : 0;
   }
 
   private isGearNumber(y: number, x: number, target: IPos): boolean {
@@ -75,7 +76,7 @@ export class GearRatios {
   private nextTo(pos: IPos, target: IPos): boolean {
     for (let y = pos.y - 1; y <= pos.y + 1; ++y) {
       for (let x = pos.x - 1; x <= pos.x + 1; ++x) {
-        if ((y === target.y) && (x === target.x)) {
+        if (y === target.y && x === target.x) {
           return true;
         }
       }
@@ -84,13 +85,15 @@ export class GearRatios {
   }
 
   private isNumber(y: number, x: number): boolean {
-    return (/[0-9]/.test(this.get(y, x)));
+    return /[0-9]/.test(this.get(y, x));
   }
 
   private isPartNumber(y: number, x: number, length: number): boolean {
     return (
-      this.isSymbol(y, x - 1) || this.isSymbol(y, x + length) ||
-      this.symbolAbove(y, x, length) || this.symbolBelow(y, x, length)
+      this.isSymbol(y, x - 1) ||
+      this.isSymbol(y, x + length) ||
+      this.symbolAbove(y, x, length) ||
+      this.symbolBelow(y, x, length)
     );
   }
 
@@ -121,7 +124,7 @@ export class GearRatios {
   }
 }
 
-PuzzleInputReader.getPuzzleInput('./puzzle-input.txt.txt').then(data => {
+getFileContent('').then((data) => {
   const gearRatios: GearRatios = new GearRatios(data);
   console.log(gearRatios.partOne());
   console.log(gearRatios.partTwo());

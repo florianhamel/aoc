@@ -1,4 +1,4 @@
-import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
+import { getFileContent } from '../../shared/utils';
 
 interface IRace {
   time: number;
@@ -28,38 +28,46 @@ export class Race {
   }
 
   private getDelta(race: IRace): number {
-    return (Math.pow(race.time, 2) - (4 * (-1) * (-race.distance)));
+    return Math.pow(race.time, 2) - 4 * -1 * -race.distance;
   }
 
   private getSolutions(race: IRace, delta: number): number[] {
     return [
       Math.ceil((-race.time + Math.sqrt(delta)) / -2),
-      Math.floor((-race.time - Math.sqrt(delta)) / -2)
+      Math.floor((-race.time - Math.sqrt(delta)) / -2),
     ];
   }
 
   private getBigRace(): IRace {
     return {
       time: parseInt(this.extractNumbers(this.lines.at(0)!).join('')),
-      distance: parseInt(this.extractNumbers(this.lines.at(1)!).join(''))
+      distance: parseInt(this.extractNumbers(this.lines.at(1)!).join('')),
     };
   }
 
   private getRaces(): IRace[] {
-    const times: number[] = this.extractNumbers(this.lines.at(0)!).map(number => parseInt(number));
-    const distances: number[] = this.extractNumbers(this.lines.at(1)!).map(number => parseInt(number));
+    const times: number[] = this.extractNumbers(this.lines.at(0)!).map((number) =>
+      parseInt(number),
+    );
+    const distances: number[] = this.extractNumbers(this.lines.at(1)!).map((number) =>
+      parseInt(number),
+    );
     const races: IRace[] = [];
     for (let i = 0; i < times.length && i < distances.length; ++i) {
       races.push({
         time: times.at(i)!,
-        distance: distances.at(i)!
+        distance: distances.at(i)!,
       });
     }
     return races;
   }
 
   private extractNumbers(line: string): string[] {
-    return line.split(':').at(1)!.split(' ').filter(time => time !== '');
+    return line
+      .split(':')
+      .at(1)!
+      .split(' ')
+      .filter((time) => time !== '');
   }
 
   private getWinsCount(race: IRace): number {
@@ -73,7 +81,7 @@ export class Race {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
+getFileContent('').then((data) => {
   const race: Race = new Race(data);
   console.log(race.partOne());
   console.log(race.partTwo());

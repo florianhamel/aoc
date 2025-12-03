@@ -1,4 +1,4 @@
-import { PuzzleInputReader } from '../../../shared/puzzle-input-reader';
+import { getFileContent } from '../../shared/utils';
 
 export class Scratchcards {
   readonly lines: string[];
@@ -11,11 +11,11 @@ export class Scratchcards {
 
   partOne(): number {
     let sum: number = 0;
-    this.lines.forEach(line => {
+    this.lines.forEach((line) => {
       const winningNumbers: string[] = this.getNumbers(line, this.winning);
       const scratchedNumbers: string[] = this.getNumbers(line, this.scratched);
-      const intersection: string[] = scratchedNumbers.filter(nbr => winningNumbers.includes(nbr));
-      sum += intersection.reduce(points => (points !== 0) ? points * 2 : 1, 0);
+      const intersection: string[] = scratchedNumbers.filter((nbr) => winningNumbers.includes(nbr));
+      sum += intersection.reduce((points) => (points !== 0 ? points * 2 : 1), 0);
     });
     return sum;
   }
@@ -26,11 +26,11 @@ export class Scratchcards {
 
   private processScratchcards(lines: string[]): number {
     let sum: number = lines.length;
-    lines.forEach(line => {
+    lines.forEach((line) => {
       const id: number = this.getId(line);
       const winningNumbers: string[] = this.getNumbers(line, this.winning);
       const scratchedNumbers: string[] = this.getNumbers(line, this.scratched);
-      const intersection: string[] = scratchedNumbers.filter(nbr => winningNumbers.includes(nbr));
+      const intersection: string[] = scratchedNumbers.filter((nbr) => winningNumbers.includes(nbr));
       const copiedScratchcards: string[] = this.getCopiedLines(intersection.length, id);
       sum += this.processScratchcards(copiedScratchcards);
     });
@@ -38,8 +38,16 @@ export class Scratchcards {
   }
 
   private getId(line: string): number {
-    return parseInt(line.split(':').at(0)!.split(' ')
-      .filter(elem => elem !== '').at(1)!) ?? -1;
+    return (
+      parseInt(
+        line
+          .split(':')
+          .at(0)!
+          .split(' ')
+          .filter((elem) => elem !== '')
+          .at(1)!,
+      ) ?? -1
+    );
   }
 
   private getCopiedLines(length: number, id: number): string[] {
@@ -47,7 +55,11 @@ export class Scratchcards {
   }
 
   private getNumbers(line: string, index: 0 | 1): string[] {
-    return this.getRawNumbers(line, index).split(' ').filter(nbr => nbr !== '') ?? [];
+    return (
+      this.getRawNumbers(line, index)
+        .split(' ')
+        .filter((nbr) => nbr !== '') ?? []
+    );
   }
 
   private getRawNumbers(line: string, index: 0 | 1): string {
@@ -55,7 +67,7 @@ export class Scratchcards {
   }
 }
 
-PuzzleInputReader.getPuzzleInput('./puzzle-input.txt').then(data => {
+getFileContent('./puzzle-input.txt').then((data) => {
   const scratchcards: Scratchcards = new Scratchcards(data);
   console.log(scratchcards.partOne());
   console.log(scratchcards.partTwo());

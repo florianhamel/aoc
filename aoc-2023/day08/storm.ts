@@ -1,4 +1,4 @@
-import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
+import { getFileContent } from '../../shared/utils';
 
 interface IDestination {
   left: string;
@@ -16,18 +16,17 @@ abstract class AbstractStorm {
   protected abstract getDistance(instructions: string[], map: Map<string, IDestination>): number;
 
   protected getInstructions(instructionsToken: string): string[] {
-    return [...instructionsToken].map(token => (token === 'L') ? 'left' : 'right');
+    return [...instructionsToken].map((token) => (token === 'L' ? 'left' : 'right'));
   }
 
   protected getMap(destinationTokens: string[]): Map<string, IDestination> {
     const map: Map<string, IDestination> = new Map<string, IDestination>();
-    destinationTokens.forEach(token => {
+    destinationTokens.forEach((token) => {
       const matches: string[] = token.match(/[0-9A-Z]{3}/g) as string[];
       map.set(matches.at(0)!, { left: matches.at(1)!, right: matches.at(2)! });
     });
     return map;
   }
-
 }
 
 export class Storm extends AbstractStorm {
@@ -40,7 +39,7 @@ export class Storm extends AbstractStorm {
       const destination = map.get(position)! as any;
       const instruction: string = instructions.at(index)!;
       position = destination[instruction];
-      index = (index === instructions.length - 1) ? 0 : index + 1;
+      index = index === instructions.length - 1 ? 0 : index + 1;
     }
     return count;
   }
@@ -48,12 +47,17 @@ export class Storm extends AbstractStorm {
 
 export class GhostStorm extends AbstractStorm {
   protected getDistance(instructions: string[], map: Map<string, IDestination>): number {
-    let lengths: number[] = [...map.keys()].filter(key => /..A/.test(key)).map(position =>
-      this.getLoopLength(position, instructions, map));
+    let lengths: number[] = [...map.keys()]
+      .filter((key) => /..A/.test(key))
+      .map((position) => this.getLoopLength(position, instructions, map));
     return lengths.reduce((lcm, length) => this.lcm(lcm, length));
   }
 
-  private getLoopLength(position: string, instructions: string[], map: Map<string, IDestination>): number {
+  private getLoopLength(
+    position: string,
+    instructions: string[],
+    map: Map<string, IDestination>,
+  ): number {
     let count: number = 0;
     while (!/..Z/.test(position)) {
       const destination: IDestination = map.get(position)!;
@@ -65,7 +69,7 @@ export class GhostStorm extends AbstractStorm {
   }
 
   private lcm(a: number, b: number): number {
-    return a * b / this.gcd(a, b);
+    return (a * b) / this.gcd(a, b);
   }
 
   private gcd(a: number, b: number): number {
@@ -75,7 +79,7 @@ export class GhostStorm extends AbstractStorm {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
+getFileContent('').then((data) => {
   const storm: Storm = new Storm();
   const ghostStorm: GhostStorm = new GhostStorm();
   console.log(storm.solve(data));
