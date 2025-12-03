@@ -1,4 +1,4 @@
-import { PUZZLE_INPUT, PuzzleInputReader } from '../utils/puzzle-input-reader';
+import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
 
 interface IMapper {
   dst: number;
@@ -119,7 +119,7 @@ export class Seed {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(PUZZLE_INPUT).then(data => {
+PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
   const seed: Seed = new Seed(data);
   console.log(seed.partOne());
   console.log(seed.partTwo());

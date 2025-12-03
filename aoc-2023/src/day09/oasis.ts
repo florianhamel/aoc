@@ -1,4 +1,4 @@
-import { PUZZLE_INPUT, PuzzleInputReader } from '../utils/puzzle-input-reader';
+import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
 
 abstract class AbstractOasis {
 
@@ -46,7 +46,7 @@ export class OasisBefore extends AbstractOasis {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(PUZZLE_INPUT).then(data => {
+PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
   const oasis: Oasis = new Oasis();
   const oasisBefore: OasisBefore = new OasisBefore();
   console.log(oasis.solve(data));

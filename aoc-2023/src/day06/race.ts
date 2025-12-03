@@ -1,4 +1,4 @@
-import { PUZZLE_INPUT, PuzzleInputReader } from '../utils/puzzle-input-reader';
+import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
 
 interface IRace {
   time: number;
@@ -73,7 +73,7 @@ export class Race {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(PUZZLE_INPUT).then(data => {
+PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
   const race: Race = new Race(data);
   console.log(race.partOne());
   console.log(race.partTwo());

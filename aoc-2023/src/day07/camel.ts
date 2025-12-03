@@ -1,4 +1,4 @@
-import { PUZZLE_INPUT, PuzzleInputReader } from '../utils/puzzle-input-reader';
+import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
 
 interface IHand {
   cards: string;
@@ -138,7 +138,7 @@ export class CamelJoker extends AbstractCamel {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(PUZZLE_INPUT).then(data => {
+PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
   const camel: Camel = new Camel(data);
   const camelJoker: CamelJoker = new CamelJoker(data);
   console.log(camel.solve());

@@ -1,4 +1,4 @@
-import { PUZZLE_INPUT, PuzzleInputReader } from '../utils/puzzle-input-reader';
+import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
 
 interface IPipe {
   pos: IPos;
@@ -116,7 +116,7 @@ export class Pipe {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(PUZZLE_INPUT).then(data => {
+PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
   const pipe: Pipe = new Pipe();
   console.log(pipe.solve(data));
 });

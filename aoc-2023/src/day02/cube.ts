@@ -1,4 +1,4 @@
-import { PuzzleInputReader } from '../utils/puzzle-input-reader';
+import { PuzzleInputReader } from '../../../shared/puzzle-input-reader';
 
 interface ICube {
   quantity: number;

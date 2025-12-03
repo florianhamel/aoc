@@ -1,4 +1,4 @@
-import { PuzzleInputReader } from '../utils/puzzle-input-reader';
+import { PuzzleInputReader } from '../../../shared/puzzle-input-reader';
 
 export class Scratchcards {
   readonly lines: string[];

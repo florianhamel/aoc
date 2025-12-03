@@ -1,5 +1,5 @@
-import { PuzzleInputReader } from '../utils/puzzle-input-reader';
-import { isDefined } from '../utils/utils';
+import { PuzzleInputReader } from '../../../shared/puzzle-input-reader';
+import { isDefined } from '../../../shared/utils';
 
 interface IPos {
   y: number;

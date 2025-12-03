@@ -1,4 +1,4 @@
-import { PUZZLE_INPUT, PuzzleInputReader } from '../utils/puzzle-input-reader';
+import { puzzleInputPath, PuzzleInputReader } from '../../../shared/puzzle-input-reader';
 
 interface IDestination {
   left: string;
@@ -75,7 +75,7 @@ export class GhostStorm extends AbstractStorm {
   }
 }
 
-PuzzleInputReader.getPuzzleInput(PUZZLE_INPUT).then(data => {
+PuzzleInputReader.getPuzzleInput(puzzleInputPath).then(data => {
   const storm: Storm = new Storm();
   const ghostStorm: GhostStorm = new GhostStorm();
   console.log(storm.solve(data));
