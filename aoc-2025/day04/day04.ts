@@ -1,15 +1,42 @@
 type Pos = { y: number; x: number };
 
-export function countForkableRollsOfPaper(diagram: Readonly<string[][]>) {
-  let forkableRollsOfPaper = 0;
+export function countMaxForkableRollsOfPaper(rawDiagram: string) {
+  const diagram = rawDiagram.split('\n').map((line) => line.split(''));
+  let maxForkableRollsOfPaper = 0;
+  while (true) {
+    const positions = getPosOfForkableRollsOfPaper(diagram);
+    const countOfForkableRollsOfPaper = positions.length;
+    if (positions.length === 0) {
+      break;
+    }
+    forkliftRollsOfPaper(positions, diagram);
+    maxForkableRollsOfPaper += countOfForkableRollsOfPaper;
+  }
+  return maxForkableRollsOfPaper;
+}
+
+export function countForkableRollsOfPaper(rawDiagram: string) {
+  const diagram = rawDiagram.split('\n').map((line) => line.split(''));
+  const positions = getPosOfForkableRollsOfPaper(diagram);
+  return positions.length;
+}
+
+function forkliftRollsOfPaper(positions: Pos[], diagram: Readonly<string[][]>) {
+  for (let pos of positions) {
+    diagram[pos.y]![pos.x] = '.';
+  }
+}
+
+function getPosOfForkableRollsOfPaper(diagram: Readonly<string[][]>) {
+  const forkableRollsOfPaperPos: Pos[] = [];
   for (let y = 0; y < diagram.length; y++) {
-    for (let x = 0; x < diagram.at(y)!.length; x++) {
+    for (let x = 0; x < diagram[y]!.length; x++) {
       if (diagram[y]![x] === '@' && countAdjacentRollsOfPaper({ y, x }, diagram) < 4) {
-        forkableRollsOfPaper++;
+        forkableRollsOfPaperPos.push({ y, x });
       }
     }
   }
-  return forkableRollsOfPaper;
+  return forkableRollsOfPaperPos;
 }
 
 function countAdjacentRollsOfPaper(pos: Pos, diagram: Readonly<string[][]>) {
