@@ -1,28 +1,17 @@
-export function countIdsInRanges(ranges: Readonly<[number, number][]>) {
-  let freshIngredientIdsCount = 0;
-  for (let i = 0; i < ranges.length; i++) {
-    const iRange = ranges[i];
-    freshIngredientIdsCount += length(iRange);
-    for (let j = i + 1; j < ranges.length; j++) {
-      const jRange = ranges[j];
-      const ijIntersection = intersect(iRange, jRange);
-      if (ijIntersection) {
-        freshIngredientIdsCount -= length(ijIntersection);
-      }
-    }
+export type Range = [number, number];
+
+export function countFreshIngredientIds(ranges: Readonly<[number, number][]>) {
+  let count = 0;
+  return count;
+}
+
+function remove(source: [number, number], toRemove: [number, number]) {
+  if (source[0] <= toRemove[0] && toRemove[1] <= source[1]) {
+    return [
+      [source[0], toRemove[0]],
+      [toRemove[1], source[1]],
+    ];
   }
-  let rangesIntersection = ranges[0] as [number, number] | null;
-  let i = 1;
-  while (i < ranges.length && rangesIntersection) {
-    console.log('rangesIntersection:', rangesIntersection, '| ranges[i]', ranges[i]);
-    rangesIntersection = intersect(rangesIntersection, ranges[i]);
-    i++;
-  }
-  if (rangesIntersection) {
-    console.log('super intersection:', rangesIntersection);
-    freshIngredientIdsCount += length(rangesIntersection);
-  }
-  return freshIngredientIdsCount;
 }
 
 export function intersect(rangeA: [number, number], rangeB: [number, number]) {

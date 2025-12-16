@@ -1,5 +1,5 @@
 import { fromAoc2025, getFileContent } from '../../shared/utils';
-import { countFreshIngredients, countIdsInRanges as countFreshIngredientIds, intersect } from './day05';
+import { countFreshIngredientIds, countFreshIngredients, intersect } from './day05';
 
 describe('day05', () => {
   describe('day05 - part 1/2', () => {
@@ -54,6 +54,28 @@ describe('day05', () => {
       expect(output).toBe(14);
     });
 
+    it('should solve part 2 when a bit harder', () => {
+      // given
+      const input =
+        '50-100\n' +
+        '70-85\n' +
+        '25-125\n' +
+        '80-150\n' +
+        '175-200\n' +
+        '126-180\n' +
+        '510-520\n' +
+        '\n' +
+        '1\n';
+      const [strRanges, _] = input.split('\n\n').map((s) => s.split('\n'));
+      const ranges = strRanges!.map((r) => r.split('-').map((v) => +v) as [number, number]);
+
+      // when
+      const output = countFreshIngredientIds(ranges);
+
+      // then
+      expect(output).toBe(187);
+    });
+
     it.each([
       {
         setA: [20, 40] as [number, number],
@@ -94,5 +116,19 @@ describe('day05', () => {
     console.log('Part 1:', countFreshIngredients(ranges, ids));
     console.log('Part 2:', countFreshIngredientIds(ranges));
     // Part 2: NOT 353703972459442
+  });
+});
+
+describe('experiment with bitwise operator', () => {
+  it('should allow me to experiment with bitwise operator', () => {
+    const n = 4;
+    for (let mask = 1; mask < 1 << n; mask++) {
+      console.log('mask', mask.toString(2));
+      for (let i = 0; i < n; i++) {
+        if (mask & (1 << i)) {
+          console.log((1 << i).toString(2));
+        }
+      }
+    }
   });
 });
