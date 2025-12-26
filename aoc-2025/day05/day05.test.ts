@@ -1,5 +1,11 @@
 import { fromAoc2025, getFileContent } from '../../shared/utils';
-import { countFreshIngredientIds, countFreshIngredients, intersect, type RangeSet } from './day05';
+import {
+  countFreshIngredientIds,
+  countFreshIngredients,
+  intersect,
+  removeRangeFrom,
+  type RangeSet,
+} from './day05';
 
 describe('day05', () => {
   describe('day05 - part 1/2', () => {
@@ -18,7 +24,7 @@ describe('day05', () => {
         '17\n' +
         '32\n';
       const [strRanges, strIds] = input.split('\n\n').map((s) => s.split('\n'));
-      const ranges = strRanges!.map((r) => r.split('-').map((v) => BigInt(v)) as RangeSet);
+      const ranges = strRanges!.map((r) => r.split('-').map((v) => +v) as RangeSet);
       const ids = strIds!.map((v) => +v);
 
       // when
@@ -36,7 +42,7 @@ describe('day05', () => {
     ])('should solve part 2 easy', (it) => {
       // given
       const [strRanges, _] = it.rawRange.split('\n\n').map((s) => s.split('\n'));
-      const ranges = strRanges!.map((r) => r.split('-').map((v) => BigInt(v)) as RangeSet);
+      const ranges = strRanges!.map((r) => r.split('-').map((v) => +v) as RangeSet);
 
       // when
       const output = countFreshIngredientIds(ranges);
@@ -60,7 +66,7 @@ describe('day05', () => {
         '17\n' +
         '32\n';
       const [strRanges, _] = input.split('\n\n').map((s) => s.split('\n'));
-      const ranges = strRanges!.map((r) => r.split('-').map((v) => BigInt(v)) as RangeSet);
+      const ranges = strRanges!.map((r) => r.split('-').map((v) => +v) as RangeSet);
 
       // when
       const output = countFreshIngredientIds(ranges);
@@ -82,7 +88,7 @@ describe('day05', () => {
         '\n' +
         '1\n';
       const [strRanges, _] = input.split('\n\n').map((s) => s.split('\n'));
-      const ranges = strRanges!.map((r) => r.split('-').map((v) => BigInt(v)) as RangeSet);
+      const ranges = strRanges!.map((r) => r.split('-').map((v) => +v) as RangeSet);
 
       // when
       const output = countFreshIngredientIds(ranges);
@@ -90,42 +96,53 @@ describe('day05', () => {
       // then
       expect(output).toBe(187);
     });
+  });
 
-    it.each([
-      {
-        setA: [20n, 40n] as RangeSet,
-        setB: [30n, 35n] as RangeSet,
-        expected: [30n, 35n],
-      },
-      {
-        setA: [20n, 40n] as RangeSet,
-        setB: [30n, 50n] as RangeSet,
-        expected: [30, 40],
-      },
-      {
-        setA: [20n, 40n] as RangeSet,
-        setB: [10n, 30n] as RangeSet,
-        expected: [20, 30],
-      },
-      {
-        setA: [20n, 40n] as RangeSet,
-        setB: [40n, 60n] as RangeSet,
-        expected: [40, 40],
-      },
-      { setA: [20n, 40n] as RangeSet, setB: [0n, 10n] as RangeSet, expected: null },
-      { setA: [20n, 40n] as RangeSet, setB: [50n, 60n] as RangeSet, expected: null },
-    ])('should intersect properly $setA with $setB given sets', (it) => {
-      // when
-      const intersection = intersect(it.setA, it.setB);
-      // then
-      expect(intersection).toEqual(intersection);
-    });
+  it.each([
+    {
+      toRemove: [30, 35] as RangeSet,
+      from: [20, 40] as RangeSet,
+      expected: [
+        [20, 29],
+        [36, 40],
+      ],
+    },
+    {
+      toRemove: [30, 50] as RangeSet,
+      from: [20, 40] as RangeSet,
+      expected: [[20, 29]],
+    },
+    {
+      toRemove: [10, 30] as RangeSet,
+      from: [20, 40] as RangeSet,
+      expected: [[31, 40]],
+    },
+    {
+      toRemove: [40, 60] as RangeSet,
+      from: [20, 40] as RangeSet,
+      expected: [[20, 39]],
+    },
+    {
+      toRemove: [0, 20] as RangeSet,
+      from: [20, 40] as RangeSet,
+      expected: [[21, 40]],
+    },
+    {
+      toRemove: [0, 100] as RangeSet,
+      from: [20, 40] as RangeSet,
+      expected: [null],
+    },
+  ])('should remove $toRemove from $from', (it) => {
+    // when
+    const range = removeRangeFrom(it.toRemove, it.from);
+    // then
+    expect(range).toEqual(it.expected);
   });
 
   it('should log answers', async () => {
     const raw = await getFileContent(fromAoc2025('day05'));
     const [strRanges, strIds] = raw.split('\n\n').map((s) => s.split('\n'));
-    const ranges = strRanges!.map((r) => r.split('-').map((v) => BigInt(v)) as RangeSet);
+    const ranges = strRanges!.map((r) => r.split('-').map((v) => +v) as RangeSet);
     const ids = strIds!.map((v) => +v);
 
     // console.log('Part 1:', countFreshIngredients(ranges, ids));
